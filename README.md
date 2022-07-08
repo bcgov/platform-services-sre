@@ -2,7 +2,7 @@
 
 # platform-services-cerberus
 
-Use Cerberus for cluster monitoring that serves a go/no-go signal for Uptime Robot.
+Use Cerberus for cluster monitoring that serves a go/no-go signal for uptime status.
 
 ### Things that Cerberus monitors:
 - [x] cluster Operators

@@ -4,7 +4,7 @@ FROM registry.redhat.io/openshift4/ose-cli:v4.9
 
 LABEL maintainer="Shelly Han <Shelly.Han@gov.bc.ca>" \
       io.k8s.display-name="Cerberus Monitoring" \
-      io.k8s.description="Cluster monitoring that serves a go/no-go signal for Uptime Robot."
+      io.k8s.description="Cluster monitoring that serves a go/no-go signal for uptime status."
 
 # Copy entitlements
 COPY ./etc-pki-entitlement /etc/pki/entitlement
