@@ -3,6 +3,7 @@ apiVersion: image.openshift.io/v1
 kind: ImageStream
 metadata:
   name: cerberus
+  namespace: openshift-bcgov-cerberus
   labels:
     app: cerberus
 ---
@@ -12,6 +13,7 @@ metadata:
   labels:
     app: cerberus
   name: cerberus
+  namespace: openshift-bcgov-cerberus
 spec:
   resources:
     limits:
@@ -36,7 +38,6 @@ spec:
     - configMap:
         name: platform-services-controlled-rhsm-conf
       destinationDir: rhsm-conf
-    contextDir: monitoring/cerberus
     git:
       ref: main
       uri: https://github.com/bcgov/platform-services-cerberus
