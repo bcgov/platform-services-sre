@@ -38,7 +38,7 @@ spec:
       destinationDir: rhsm-conf
     contextDir: monitoring/cerberus
     git:
-      ref: master
+      ref: main
       uri: https://github.com/bcgov/platform-services-cerberus
     type: Git
   strategy:
