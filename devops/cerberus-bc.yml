@@ -39,7 +39,7 @@ spec:
     contextDir: monitoring/cerberus
     git:
       ref: master
-      uri: https://github.com/BCDevOps/platform-services
+      uri: https://github.com/bcgov/platform-services-cerberus
     type: Git
   strategy:
     type: Docker
