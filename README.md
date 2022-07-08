@@ -1,3 +1,5 @@
+![Lifecycle:Maturing](https://img.shields.io/badge/Lifecycle-Maturing-007EC6)
+
 # platform-services-cerberus
 
 Use Cerberus for cluster monitoring that serves a go/no-go signal for Uptime Robot.
