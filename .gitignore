@@ -1,8 +1,3 @@
-# ignore kube cofig file
-cerberus/config/config
-
-# ignore local entitlement secret and config for build:
-cerberus/entitlement.yaml
-cerberus/etc-pki-entitlement/
-cerberus/rhsm-ca/
-cerberus/rhsm-conf/
+# general
+log*
+output*
