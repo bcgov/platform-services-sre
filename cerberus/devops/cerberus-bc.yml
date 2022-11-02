@@ -38,9 +38,10 @@ spec:
     - configMap:
         name: platform-services-controlled-rhsm-conf
       destinationDir: rhsm-conf
+    contextDir: cerberus
     git:
       ref: main
-      uri: https://github.com/bcgov/platform-services-cerberus
+      uri: https://github.com/bcgov/platform-services-sre
     type: Git
   strategy:
     type: Docker
