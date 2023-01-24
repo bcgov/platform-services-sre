@@ -1,6 +1,7 @@
 /**
  * uptime-rc-webhook.js
  * Add Uptime.com notifications via WebHook in Rocket.Chat
+ * Usage on uptime.com webhook integration setup: put this in the Custom HTTP Headers to tag ppl in the message`contactusers: @<user1_rocketchat_account> @<user2_rocketchat_account> ... ,`
  */
 
 /* globals console, _, s */
