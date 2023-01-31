@@ -30,7 +30,12 @@ class Script {
     let titleText = '';
     let titleLink = '';
     if (isUp) {
-      attachmentText += 'Back to normal now!';
+      const downtimeDuration = new Date(data.downtime.duration * 1000) // Using milliseconds from downtime duration data
+      const hours = downtimeDuration.getHours() // Get time in hours
+      const minutes = downtimeDuration.getMinutes() // Get time in minutes
+      const seconds = downtimeDuration.getSeconds() // Get time in seconds
+      const durationString = `${hours}h:${minutes}m:${seconds}s` // Displaying the result in h:m:s                              
+      attachmentText += `Back to normal now! Was down for ${durationString}`; //Calculating the downtime duration of uptime.com
       titleText = 'More info';
       titleLink = 'https://uptime.com';
     } else {
