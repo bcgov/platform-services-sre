@@ -29,7 +29,7 @@ RUN INSTALL_PKGS="git python36 python3-pip gcc python36-devel libtiff-devel libj
     rm -rf /etc/pki/entitlement && \
     rm -rf /etc/rhsm
 
-RUN pip3 install httplib2
+RUN pip3 install httplib2 multidict
 
 # Reference: https://github.com/chaos-kubox/cerberus/blob/main/containers/Dockerfile
 RUN git clone https://github.com/openshift-scale/cerberus /root/cerberus
