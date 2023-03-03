@@ -14,7 +14,7 @@ COPY ./rhsm-conf /etc/rhsm
 COPY ./rhsm-ca /etc/rhsm/ca
 
 # Install some packages and clean up
-RUN INSTALL_PKGS="git python36 python3-pip gcc python36-devel libtiff-devel libjpeg-turbo-devel openjpeg2-devel zlib-devel freetype-devel lcms2-devel libwebp-devel tcl-devel tk-devel harfbuzz-devel fribidi-devel libraqm-devel libimagequant-devel libxcb-devel" && \
+RUN INSTALL_PKGS="git python39 python3-pip gcc python39-devel libtiff-devel libjpeg-turbo-devel openjpeg2-devel zlib-devel freetype-devel lcms2-devel libwebp-devel tcl-devel tk-devel harfbuzz-devel fribidi-devel libraqm-devel libimagequant-devel libxcb-devel" && \
     # Initialize /etc/yum.repos.d/redhat.repo
     # See https://access.redhat.com/solutions/1443553
     rm /etc/rhsm-host && \
@@ -32,7 +32,7 @@ RUN INSTALL_PKGS="git python36 python3-pip gcc python36-devel libtiff-devel libj
 RUN pip3 install httplib2 multidict typing_extensions
 
 # Reference: https://github.com/chaos-kubox/cerberus/blob/main/containers/Dockerfile
-RUN git clone https://github.com/openshift-scale/cerberus /root/cerberus
+RUN git clone https://github.com/redhat-chaos/cerberus /root/cerberus
 
 RUN ls -al
 
