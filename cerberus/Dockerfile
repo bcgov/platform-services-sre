@@ -33,7 +33,7 @@ COPY entrypoint.sh /usr/local/bin/
 RUN chmod 755 /usr/local/bin/entrypoint.sh \
     && chgrp 0 /usr/local/bin/entrypoint.sh
 
-RUN cd /root/cerberus && pip3 install --upgrade pip && pip3 install -r requirements.txt
+RUN cd /root/cerberus && pip3 install --upgrade pip && pip3 install httplib2 && pip3 install -r requirements.txt
 
 WORKDIR /root/cerberus
 
