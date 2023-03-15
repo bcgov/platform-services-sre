@@ -66,7 +66,9 @@ def main():
 
   # get cluster API url:
   global cluster_api_url
-  cluster_api_url = runcommand.invoke("kubectl cluster-info | awk 'NR==1' | sed -r " "'s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g'")
+  cluster_api_url = runcommand.invoke("kubectl cluster-info | awk 'NR==1' | grep -Eo '(http|https)://[a-zA-Z0-9./?=_%:-]*'")
+
+  logging.info(cluster_api_url)
 
   check1 = check_nodes()
   check2 = check_cluster_readyz()
