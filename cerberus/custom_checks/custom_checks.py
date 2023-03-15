@@ -24,6 +24,8 @@ def check_cluster_readyz():
   # readyz state
   api_server_readyz_url = cluster_api_url.split(" ")[-1].strip() + "/readyz"
   (resp, content) = h.request(api_server_readyz_url, "GET")
+
+  logging.info(content)
   
   return "ok" in str(content)
 
