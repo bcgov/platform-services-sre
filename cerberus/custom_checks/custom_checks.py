@@ -1,6 +1,5 @@
 import logging
 import subprocess
-import httplib2
 import requests
 import json
 import cerberus.invoke.command as runcommand
@@ -24,7 +23,6 @@ def check_cluster_readyz():
 
   # readyz state
   api_server_readyz_url = cluster_api_url.split(" ")[-1].strip() + "/readyz"
-  # (resp, content) = h.request(api_server_readyz_url, "GET")
   response = requests.get(api_server_readyz_url, verify=False)
 
   return "ok" in str(response.content)
@@ -37,7 +35,6 @@ def check_image_registry_and_routing():
   image_registry_host = eval(image_registry_route)['spec']['host']
   image_registry_url = "https://" + image_registry_host + "/healthz"
   logging.info("Detected Image Registry API: " + image_registry_url)
-  # (resp, content) = h.request(image_registry_url, "GET")
 
   response = requests.get(image_registry_url, verify=False)
 
@@ -65,20 +62,14 @@ def check_storage():
 def main():
   logging.info("------------------- Start Custom Checks -------------------")
 
-  # set http client:
-  # global h
-  # h = httplib2.Http(disable_ssl_certificate_validation=True)
-
   # get cluster API url:
   global cluster_api_url
   cluster_api_url = runcommand.invoke("kubectl cluster-info | awk 'NR==1' | grep -Eo '(http|https)://[a-zA-Z0-9./?=_%:-]*'")
 
   check1 = check_nodes()
   check2 = check_cluster_readyz()
-  # check3 = check_image_registry_and_routing()
-  # check4 = check_storage()
-  check3 = True
-  check4 = True
+  check3 = check_image_registry_and_routing()
+  check4 = check_storage()
   logging.info("------------------- Finished Custom Checks -------------------")
 
   return check1 & check2 & check3 & check4
