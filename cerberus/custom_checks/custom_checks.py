@@ -25,8 +25,6 @@ def check_cluster_readyz():
   api_server_readyz_url = cluster_api_url.split(" ")[-1].strip() + "/readyz"
   (resp, content) = h.request(api_server_readyz_url, "GET")
 
-  logging.info(content)
-  
   return "ok" in str(content)
 
 def check_image_registry_and_routing():
@@ -69,8 +67,6 @@ def main():
   # get cluster API url:
   global cluster_api_url
   cluster_api_url = runcommand.invoke("kubectl cluster-info | awk 'NR==1' | grep -Eo '(http|https)://[a-zA-Z0-9./?=_%:-]*'")
-
-  logging.info(cluster_api_url)
 
   check1 = check_nodes()
   check2 = check_cluster_readyz()
