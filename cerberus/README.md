@@ -53,10 +53,6 @@ Here is an example of the monitoring output that reflects the above monitors:
 2021-07-07 22:49:15,776 [INFO] Sleeping for the specified duration: 60
 ```
 
-### TODO:
-- build cronjob for full application life cycle monitoring
-- switch to use Artifactory
-
 
 ### Build and Deploy Cerberus
 
@@ -75,18 +71,19 @@ oc create configmap cerberus-config --from-file=./config/cerberus-config-templat
 # Optional, for local testing only (included in docker image already)
 oc create configmap cerberus-custom-check --from-file=./custom_checks/custom_checks.py
 
-# before building, make sure the RH entitlement certs are ready AND up-to-date:
-oc -n [namespace] get configmaps platform-services-controlled-rhsm-ca platform-services-controlled-rhsm-conf
-oc -n [namespace] get secret platform-services-controlled-etc-pki-entitlement
+# before building, make sure the Artifactory secrets exist:
+# push secret:
+oc -n [namespace] get secret artifacts-platform-services
+# pull secret:
+oc -n [namespace] get secret artifacts-platsvcs-reader
+
+# NOTE: the artifactory secrets are shared from `gitops-tools` namespace. If the secrets are missing or not working, copy them from there.
 
 # build:
 oc -n [namespace] create -f ./devops/cerberus-bc.yml
 
-# deploy cerberus:
+# deploy cerberus (make sure it's using the correct image tag):
 oc -n [namespace] create -f ./devops/cerberus.yml
-
-# take a backup of the image after testing:
-oc tag cerberus:latest cerberus:backup
 ```
 
 ### Get Cerberus Monitoring Result:
@@ -113,7 +110,7 @@ ls -al /root/cerberus/history
 ```
 
 ### References:
-- cerberus source repo: https://github.com/chaos-kubox/cerberus
+- cerberus source repo: https://github.com/redhat-chaos/cerberus
 - setup: https://gexperts.com/wp/building-a-simple-up-down-status-dashboard-for-openshift/
-- deploy containerized version: https://github.com/cloud-bulldozer/cerberus/tree/master/containers
+- deploy containerized version: https://github.com/redhat-chaos/cerberus/tree/main/containers
 - custom checks: https://github.com/cloud-bulldozer/cerberus#bring-your-own-checks
