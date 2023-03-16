@@ -77,6 +77,8 @@ oc -n [namespace] get secret artifacts-platform-services
 # pull secret:
 oc -n [namespace] get secret artifacts-platsvcs-reader
 
+# NOTE: the artifactory secrets are shared from `gitops-tools` namespace. If the secrets are missing or not working, copy them from there.
+
 # build:
 oc -n [namespace] create -f ./devops/cerberus-bc.yml
 
