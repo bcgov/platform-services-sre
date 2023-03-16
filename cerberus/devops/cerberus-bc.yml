@@ -4,7 +4,7 @@ kind: BuildConfig
 metadata:
   labels:
     app: cerberus
-  name: cerberus-artifactory
+  name: cerberus
   namespace: openshift-bcgov-cerberus
 spec:
   resources:
