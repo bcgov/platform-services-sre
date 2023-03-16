@@ -1,6 +1,6 @@
 import logging
 import subprocess
-import httplib2
+import requests
 import json
 import cerberus.invoke.command as runcommand
 
@@ -23,9 +23,9 @@ def check_cluster_readyz():
 
   # readyz state
   api_server_readyz_url = cluster_api_url.split(" ")[-1].strip() + "/readyz"
-  (resp, content) = h.request(api_server_readyz_url, "GET")
-  
-  return "ok" in str(content)
+  response = requests.get(api_server_readyz_url, verify=False)
+
+  return "ok" in str(response.content)
 
 def check_image_registry_and_routing():
   logging.info("Check Image Registry API and test on routing layer.")
@@ -35,9 +35,11 @@ def check_image_registry_and_routing():
   image_registry_host = eval(image_registry_route)['spec']['host']
   image_registry_url = "https://" + image_registry_host + "/healthz"
   logging.info("Detected Image Registry API: " + image_registry_url)
-  (resp, content) = h.request(image_registry_url, "GET")
 
-  return resp.status == 200
+  response = requests.get(image_registry_url, verify=False)
+
+
+  return response.status_code == 200
 
 def check_storage():
   logging.info("Check if netapp storages are all available.")
@@ -60,13 +62,9 @@ def check_storage():
 def main():
   logging.info("------------------- Start Custom Checks -------------------")
 
-  # set http client:
-  global h
-  h = httplib2.Http(disable_ssl_certificate_validation=True)
-
   # get cluster API url:
   global cluster_api_url
-  cluster_api_url = runcommand.invoke("kubectl cluster-info | awk 'NR==1' | sed -r " "'s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g'")
+  cluster_api_url = runcommand.invoke("kubectl cluster-info | awk 'NR==1' | grep -Eo '(http|https)://[a-zA-Z0-9./?=_%:-]*'")
 
   check1 = check_nodes()
   check2 = check_cluster_readyz()
