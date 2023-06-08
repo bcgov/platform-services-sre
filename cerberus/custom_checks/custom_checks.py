@@ -85,9 +85,9 @@ def check_PV():
     logging.info("PVC check result, file:" +
                  check_file + ", block:" + check_block)
     if (check_file == "successfully" and check_block == "successfully"):
-        return False
-    else:
         return True
+    else:
+        return False
 
 
 def main():
