@@ -18,6 +18,7 @@ Use Cerberus for cluster monitoring that serves a go/no-go signal for uptime sta
   - API service
   - worker nodes
   - NetApp storage (Trident backend)
+  - pvc check(prerequisite: pvc checker deployment needs to happen first, done by ccm)
 
 
 Here is an example of the monitoring output that reflects the above monitors:
@@ -108,6 +109,36 @@ oc -n [namespace] sa get-token cerberus
 # 1. rsh into pod and check for filesystem permission:
 ls -al /root/cerberus/history
 ```
+
+
+### Test custom checks:
+
+This document provides instructions on how to test custom checks in the `openshift-bcgov-cerberus` namespace. The recommended approach for testing is to start a debug pod, copy the custom check script to the pod, and run the script from there. The following steps outline the process:
+##### Step 1: Start Debug Pod
+To begin testing, start a debug pod in the `openshift-bcgov-cerberus` namespace. This can be achieved by executing the following command:
+```
+oc debug deployment/cerberus-deployment
+```
+
+##### Step 2: Copy Custom Check Script
+Once the debug pod is running, copy the custom check script (`custom_checks.py`) that you are working on to the debug pod. This can be done using the `oc cp` command. Assuming the custom check script is located at `cerberus/custom_checks/custom_checks.py` and the debug pod is named `cerberus-deployment-debug`, execute the following command:
+```
+oc cp cerberus/custom_checks/custom_checks.py cerberus-deployment-debug:/root/cerberus/custom_checks/custom_checks.py
+```
+
+##### Step 3: Run the Custom Check Script
+After copying the custom check script to the debug pod, it's time to run the script using Cerberus. Make sure you are running the script **inside the debug pod**. To run the custom check script, execute the following command:
+```
+/usr/local/bin/entrypoint.sh
+```
+
+
+By running this command, the custom check script (`custom_check.py`) will be executed within the debug pod.
+
+Once the command is executed, you should see the custom check script being run and the corresponding output or any errors that occur during execution.
+
+This method allows you to test and debug custom checks in a controlled environment before deploying them to production.
+
 
 ### References:
 - cerberus source repo: https://github.com/redhat-chaos/cerberus
