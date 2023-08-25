@@ -1,14 +1,25 @@
 /**
  * uptime-rc-webhook.js
  * Add Uptime.com notifications via WebHook in Rocket.Chat
- * Usage on uptime.com webhook integration setup: put this in the Custom HTTP Headers to tag ppl in the message`contactusers: @<user1_rocketchat_account> @<user2_rocketchat_account> ... ,`
+ * Usage on uptime.com webhook integration setup: put this in the Custom HTTP Headers to tag ppl in the messagecontactusers: @<user1_rocketchat_account> @<user2_rocketchat_account> ... ,
  */
 
-/* globals console, _, s */
+/ globals console, _, s /
 const USERNAME = 'Uptime.com Alerts';
 const AVATAR_URL = 'https://avatars.githubusercontent.com/u/54849620?s=200&v=4';
 
-/* exported Script */
+const time = (totalSeconds) => {
+  const seconds = Math.floor(totalSeconds % 60);
+  const totalMinutes = Math.floor(totalSeconds / 60);
+  const minutes = totalMinutes % 60;
+  const totalHours = Math.floor(totalMinutes / 60);
+  const hours = totalHours % 24;
+  const days = Math.floor(totalHours / 24);
+
+  return `${days}d:${hours}h:${minutes}m:${seconds}s`;
+}
+
+/ exported Script /
 class Script {
   /**
    * @params {object} request
@@ -30,12 +41,8 @@ class Script {
     let titleText = '';
     let titleLink = '';
     if (isUp) {
-      const downtimeDuration = new Date(data.downtime.duration * 1000) // Using milliseconds from downtime duration data
-      const hours = downtimeDuration.getHours() // Get time in hours
-      const minutes = downtimeDuration.getMinutes() // Get time in minutes
-      const seconds = downtimeDuration.getSeconds() // Get time in seconds
-      const durationString = `${hours}h:${minutes}m:${seconds}s` // Displaying the result in h:m:s                              
-      attachmentText += `Back to normal now! Was down for ${durationString}`; //Calculating the downtime duration of uptime.com
+      const durationString = time(data.downtime.duration);
+      attachmentText += `Back to normal now! Was down for ${durationString}`;
       titleText = 'More info';
       titleLink = 'https://uptime.com';
     } else {
@@ -46,15 +53,15 @@ class Script {
 
     return {
       content:{
-        alias: USERNAME,
-        icon_url: AVATAR_URL,
-        text: `${contactUser} Monitor ${data.service.name} is ${statusText}.\n Link: ${data.account.site_url}\n`,
-        attachments: [{
-          title: titleText,
-          title_link: titleLink,
-          text: attachmentText,
-          color: attachmentColor
-        }]
+	alias: USERNAME,
+	icon_url: AVATAR_URL,
+	text: `${contactUser} Monitor ${data.service.name} is ${statusText}.\n Link: ${data.account.site_url}\n`,
+	attachments: [{
+	  title: titleText,
+	  title_link: titleLink,
+	  text: attachmentText,
+	  color: attachmentColor
+	}]
       }
     };
   }
