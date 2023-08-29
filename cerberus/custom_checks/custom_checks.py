@@ -93,7 +93,6 @@ def check_PV():
 
 def check_kyverno():
     logging.info("Check if the Kyverno ConfigMap is okay.")
-    result = False
 
     create_config = runcommand.invoke(
         'oc create -n openshift-bcgov-cerberus configmap simple-test --from-literal=data="asdf" && echo "successed"')
