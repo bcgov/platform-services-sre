@@ -96,19 +96,18 @@ def check_kyverno():
     result = False
 
     create_config = runcommand.invoke(
-        'oc create -n kyverno configmap simple-test --from-literal=data="asdf" && echo "successed"')
-    time.sleep(5)
-    update_config = runcommand.invoke(
-        'oc patch configmap/simple-test -n kyverno -p \'{"data":{"data":"dfad"}}\' && echo "successed"')
-    time.sleep(5)
+        'oc create -n openshift-bcgov-cerberus configmap simple-test --from-literal=data="asdf" && echo "successed"')
 
-    if ("successed" in create_config) and ("successed" in update_config):
-        delete_config = runcommand.invoke(
-            "oc delete -n kyverno configmap/simple-test")
-        result = True
-        return result
+    patch_output = runcommand.invoke(
+        'oc patch configmap/simple-test -n openshift-bcgov-cerberus -p \'{"data": {"data": "dfad"}}\'')
+
+    delete_config = runcommand.invoke(
+        "oc delete -n openshift-bcgov-cerberus configmap/simple-test")
+
+    if ("successed" in create_config) and ("patched" in patch_output):
+        return True
     else:
-        return result
+        return False
 
 
 def main():
