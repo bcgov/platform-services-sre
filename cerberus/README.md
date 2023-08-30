@@ -18,6 +18,7 @@ Use Cerberus for cluster monitoring that serves a go/no-go signal for uptime sta
   - API service
   - worker nodes
   - NetApp storage (Trident backend)
+  - pvc check(prerequisite: pvc checker deployment needs to happen first, done by ccm)
 
 
 Here is an example of the monitoring output that reflects the above monitors:
@@ -53,10 +54,6 @@ Here is an example of the monitoring output that reflects the above monitors:
 2021-07-07 22:49:15,776 [INFO] Sleeping for the specified duration: 60
 ```
 
-### TODO:
-- build cronjob for full application life cycle monitoring
-- switch to use Artifactory
-
 
 ### Build and Deploy Cerberus
 
@@ -75,18 +72,19 @@ oc create configmap cerberus-config --from-file=./config/cerberus-config-templat
 # Optional, for local testing only (included in docker image already)
 oc create configmap cerberus-custom-check --from-file=./custom_checks/custom_checks.py
 
-# before building, make sure the RH entitlement certs are ready AND up-to-date:
-oc -n [namespace] get configmaps platform-services-controlled-rhsm-ca platform-services-controlled-rhsm-conf
-oc -n [namespace] get secret platform-services-controlled-etc-pki-entitlement
+# before building, make sure the Artifactory secrets exist:
+# push secret:
+oc -n [namespace] get secret artifacts-platform-services
+# pull secret:
+oc -n [namespace] get secret artifacts-platsvcs-reader
+
+# NOTE: the artifactory secrets are shared from `gitops-tools` namespace. If the secrets are missing or not working, copy them from there.
 
 # build:
 oc -n [namespace] create -f ./devops/cerberus-bc.yml
 
-# deploy cerberus:
+# deploy cerberus (make sure it's using the correct image tag):
 oc -n [namespace] create -f ./devops/cerberus.yml
-
-# take a backup of the image after testing:
-oc tag cerberus:latest cerberus:backup
 ```
 
 ### Get Cerberus Monitoring Result:
@@ -112,8 +110,38 @@ oc -n [namespace] sa get-token cerberus
 ls -al /root/cerberus/history
 ```
 
+
+### Test custom checks:
+
+This document provides instructions on how to test custom checks in the `openshift-bcgov-cerberus` namespace. The recommended approach for testing is to start a debug pod, copy the custom check script to the pod, and run the script from there. The following steps outline the process:
+##### Step 1: Start Debug Pod
+To begin testing, start a debug pod in the `openshift-bcgov-cerberus` namespace. This can be achieved by executing the following command:
+```
+oc debug deployment/cerberus-deployment
+```
+
+##### Step 2: Copy Custom Check Script
+Once the debug pod is running, copy the custom check script (`custom_checks.py`) that you are working on to the debug pod. This can be done using the `oc cp` command. Assuming the custom check script is located at `cerberus/custom_checks/custom_checks.py` and the debug pod is named `cerberus-deployment-debug`, execute the following command:
+```
+oc cp cerberus/custom_checks/custom_checks.py cerberus-deployment-debug:/root/cerberus/custom_checks/custom_checks.py
+```
+
+##### Step 3: Run the Custom Check Script
+After copying the custom check script to the debug pod, it's time to run the script using Cerberus. Make sure you are running the script **inside the debug pod**. To run the custom check script, execute the following command:
+```
+/usr/local/bin/entrypoint.sh
+```
+
+
+By running this command, the custom check script (`custom_check.py`) will be executed within the debug pod.
+
+Once the command is executed, you should see the custom check script being run and the corresponding output or any errors that occur during execution.
+
+This method allows you to test and debug custom checks in a controlled environment before deploying them to production.
+
+
 ### References:
-- cerberus source repo: https://github.com/chaos-kubox/cerberus
+- cerberus source repo: https://github.com/redhat-chaos/cerberus
 - setup: https://gexperts.com/wp/building-a-simple-up-down-status-dashboard-for-openshift/
-- deploy containerized version: https://github.com/cloud-bulldozer/cerberus/tree/master/containers
+- deploy containerized version: https://github.com/redhat-chaos/cerberus/tree/main/containers
 - custom checks: https://github.com/cloud-bulldozer/cerberus#bring-your-own-checks
