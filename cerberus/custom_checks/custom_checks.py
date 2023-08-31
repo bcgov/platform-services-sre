@@ -2,6 +2,7 @@ import logging
 import subprocess
 import requests
 import json
+import time
 import cerberus.invoke.command as runcommand
 
 # placeholder for global var
@@ -90,6 +91,24 @@ def check_PV():
         return False
 
 
+def check_kyverno():
+    logging.info("Check if the Kyverno ConfigMap is okay.")
+
+    create_config = runcommand.invoke(
+        'oc create -n openshift-bcgov-cerberus configmap simple-test --from-literal=data="asdf" && echo "successed"')
+
+    patch_output = runcommand.invoke(
+        'oc patch configmap/simple-test -n openshift-bcgov-cerberus -p \'{"data": {"data": "dfad"}}\'')
+
+    delete_config = runcommand.invoke(
+        "oc delete -n openshift-bcgov-cerberus configmap/simple-test")
+
+    if ("successed" in create_config) and ("patched" in patch_output):
+        return True
+    else:
+        return False
+
+
 def main():
     logging.info("------------------- Start Custom Checks -------------------")
 
@@ -103,7 +122,9 @@ def main():
     check3 = check_image_registry_and_routing()
     check4 = check_storage()
     check5 = check_PV()
+    check6 = check_kyverno()
+
     logging.info(
         "------------------- Finished Custom Checks -------------------")
 
-    return check1 & check2 & check3 & check4 & check5
+    return check1 & check2 & check3 & check4 & check5 & check6
