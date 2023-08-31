@@ -17,13 +17,15 @@ spec:
         tool: Cerberus
     spec:
       serviceAccountName: cerberus
+      imagePullSecrets:
+        - name: artifacts-platsvcs-reader
       containers:
         - name: cerberus
           imagePullPolicy: Always
           # NOTE: Dockerfile changes filesystem permission for monitoring output storage. otherwise we'll need to use privileged account
           # securityContext:
           #   privileged: true
-          image: image-registry.openshift-image-registry.svc:5000/openshift-bcgov-cerberus/cerberus:latest
+          image: artifacts.developer.gov.bc.ca/plat-util-images/cerberus:test
           command: ["/bin/sh", "-c"]
           args: ["/usr/local/bin/entrypoint.sh"]
           ports:
