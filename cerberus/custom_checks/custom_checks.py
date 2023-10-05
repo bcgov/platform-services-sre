@@ -25,7 +25,7 @@ def check_nodes():
 
     up_ratio = int(node_count.strip())/int(total_node_count.strip())
     logging.info("testing" + up_ratio)
-    if (up_ratio > 0.8)
+    if (up_ratio > 0.8):
         logging.info("testing success")
     return up_ratio > 0.8
 
