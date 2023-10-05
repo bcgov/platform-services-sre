@@ -131,13 +131,13 @@ def main():
     logging.info("check3: " + check3)
 
     check4 = check_storage()
-    logging.info(="check4: " + check4)
+    logging.info("check4: " + check4)
 
     check5 = check_PV()
     logging.info("check5: " + check5)
 
     check6 = check_kyverno()
-    logging.info(="check6: " + check6)
+    logging.info("check6: " + check6)
 
     logging.info("------------------- Finished Custom Checks -------------------")
 
