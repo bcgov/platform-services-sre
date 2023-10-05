@@ -15,13 +15,13 @@ def check_nodes():
     total_node_count = runcommand.invoke("oc get nodes | wc -l")
     node_count = runcommand.invoke("oc get nodes | grep Ready | wc -l")
 
-    return True
+    up_ratio = int(node_count.strip())/int(total_node_count.strip())
 
-    # up_ratio = int(node_count.strip())/int(total_node_count.strip())
-
-    # if (up_ratio > 0.8):
-    #     logging.info("testing success")
-    # return up_ratio > 0.8
+    if (up_ratio > 0.8):
+        logging.info("Node check success")
+        return True
+    else:
+        return False
 
 
 def check_cluster_readyz():
@@ -31,7 +31,11 @@ def check_cluster_readyz():
     api_server_readyz_url = cluster_api_url.split(" ")[-1].strip() + "/readyz"
     response = requests.get(api_server_readyz_url, verify=False)
 
-    return "ok" in str(response.content)
+    if ("ok" in str(response.content)):
+        logging.info("Cluster readyz success")
+        return True
+    else:
+        return False
 
 
 def check_image_registry_and_routing():
@@ -46,8 +50,11 @@ def check_image_registry_and_routing():
 
     response = requests.get(image_registry_url, verify=False)
 
-    return response.status_code == 200
-
+    if (response.status_code == 200):
+        logging.info("Image Registry success")
+        return True
+    else:
+        return False
 
 def check_storage():
     logging.info("Check if netapp storages are all available.")
@@ -66,7 +73,8 @@ def check_storage():
 
         if (status != "online"):
             return False
-
+    
+    logging.info("Storage success")
     return True
 
 
@@ -87,6 +95,7 @@ def check_PV():
     logging.info("PVC check result, file:" +
                  check_file + ", block:" + check_block)
     if (check_file == "successfully" and check_block == "successfully"):
+        logging.info("PV connection success")
         return True
     else:
         return False
@@ -107,10 +116,9 @@ def check_kyverno():
         "oc delete -n openshift-bcgov-cerberus configmap/simple-test")
 
     if ("successed" in create_config) and ("patched" in patch_output):
-        logging.info("------------------- Kyverno OK -------------------")
+        logging.info("Kyverno success")
         return True
     else:
-        logging.info("------------------- Kyverno issue -------------------")
         return False
 
 
