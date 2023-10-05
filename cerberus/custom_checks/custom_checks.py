@@ -106,8 +106,10 @@ def check_kyverno():
         "oc delete -n openshift-bcgov-cerberus configmap/simple-test")
 
     if ("successed" in create_config) and ("patched" in patch_output):
+        logging.info("------------------- Kyverno OK -------------------")
         return True
     else:
+        logging.info("------------------- Kyverno issue -------------------")
         return False
 
 
@@ -125,8 +127,8 @@ def main():
     check4 = check_storage()
     check5 = check_PV()
     check6 = check_kyverno()
+    logging.info("check1: " + check1 + "check2: " + check2 + "check3: " + check3 + "check4: " + check4 + "check5: " + check5 + "check6: " + check6)
 
-    logging.info(
-        "------------------- Finished Custom Checks -------------------")
+    logging.info("------------------- Finished Custom Checks -------------------")
 
     return check1 & check2 & check3 & check4 & check5 & check6
