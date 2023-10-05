@@ -13,17 +13,18 @@ def check_nodes():
     logging.info("Check if Ready nodes are more than 80 percent of all nodes.")
 
     # get nodes
-    total_node_count = subprocess.check_output(
-        "oc get nodes | wc -l", shell=True, universal_newlines=True)
-    node_count = subprocess.check_output(
-        "oc get nodes | grep Ready | wc -l", shell=True, universal_newlines=True)
+    total_node_count = runcommand.invoke(
+        "oc get nodes | wc -l")
+    node_count = runcommand.invoke(
+        "oc get nodes | grep Ready | wc -l")
+    # total_node_count = subprocess.check_output(
+    #     "oc get nodes | wc -l", shell=True, universal_newlines=True)
+    # node_count = subprocess.check_output(
+    #     "oc get nodes | grep Ready | wc -l", shell=True, universal_newlines=True)
 
     up_ratio = int(node_count)/int(total_node_count)
 
-    if (up_ratio > 0.8):
-        return True
-    else:
-        return False
+    return up_ratio > 0.8
 
 
 def check_cluster_readyz():
