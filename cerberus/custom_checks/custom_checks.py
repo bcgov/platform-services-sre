@@ -20,7 +20,7 @@ def check_nodes():
 
     up_ratio = int(node_count)/int(total_node_count)
 
-    if (up_ratio > 0.8)
+    if (up_ratio > 0.8):
         return True
     else:
         return False
