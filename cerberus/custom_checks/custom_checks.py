@@ -123,22 +123,16 @@ def main():
         "kubectl cluster-info | awk 'NR==1' | grep -Eo '(http|https)://[a-zA-Z0-9./?=_%:-]*'")
 
     check1 = check_nodes()
-    logging.info("check1: " + check1)
-
     check2 = check_cluster_readyz()
-    logging.info("check2: " + check2)
-
     check3 = check_image_registry_and_routing()
-    logging.info("check3: " + check3)
-
     check4 = check_storage()
-    logging.info("check4: " + check4)
-
     check5 = check_PV()
-    logging.info("check5: " + check5)
-
     check6 = check_kyverno()
-    logging.info("check6: " + check6)
+
+    if (check1 & check2 & check3 & check4 & check5 & check6):
+        logging.info("good result")
+    else:
+        logging.info("bad result")
 
     logging.info("------------------- Finished Custom Checks -------------------")
 
