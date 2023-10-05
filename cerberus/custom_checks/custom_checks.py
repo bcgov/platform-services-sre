@@ -21,6 +21,7 @@ def check_nodes():
     #     "oc get nodes | wc -l", shell=True, universal_newlines=True)
     # node_count = subprocess.check_output(
     #     "oc get nodes | grep Ready | wc -l", shell=True, universal_newlines=True)
+    logging.info(total_node_count + " and " + node_count)
 
     up_ratio = int(node_count)/int(total_node_count)
 
