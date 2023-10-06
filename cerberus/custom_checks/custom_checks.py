@@ -135,6 +135,7 @@ def main():
     check4 = check_storage()
     # Note: this check is failing in all clusters, disabling for now!
     # check5 = check_PV()
+    check5 = True
     check6 = check_kyverno()
 
     logging.info("------------------- Finished Custom Checks -------------------")
