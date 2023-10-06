@@ -2,8 +2,8 @@ cerberus:
   distribution: openshift                              # Distribution can be kubernetes or openshift
   kubeconfig_path: /tmp/kubeconfig                     # Path to kubeconfig
   port: 8080                                           # http server port where cerberus status is published
-  watch_nodes: True                                    # Set to True for the cerberus to monitor the cluster nodes
-  watch_cluster_operators: True                        # Set to True for cerberus to monitor cluster operators
+  watch_nodes: False                                   # Set to True for the cerberus to monitor the cluster nodes - included in custom checks
+  watch_cluster_operators: False                       # Set to True for cerberus to monitor cluster operators (disabled as no need for this level of details)
   watch_url_routes:                                    # Route url's you want to monitor, this is a double array with the url and optional authorization parameter
   watch_master_schedulable:                            # When enabled checks for the schedulable master nodes with given label.
       enabled: False
@@ -31,7 +31,7 @@ cerberus:
       Sunday:
   slack_team_alias:                                    # The slack team alias to be tagged while reporting failures in the slack channel when no watcher is assigned
 
-  custom_checks:                                       # Relative paths of files conataining additional user defined checks
+  custom_checks:                                       # Relative paths of files containing additional user defined checks
     - custom_checks/custom_checks.py
 
 tunings:
@@ -43,5 +43,5 @@ tunings:
   cores_usage_percentage: 0.5                          # Set the fraction of cores to be used for multiprocessing
 
 database:
-  database_path: /tmp/data/cerberus.db                      # Path where cerberus database needs to be stored
-  reuse_database: True                                # When enabled, the database is reused to store the failures
+  database_path: /tmp/data/cerberus.db                 # Path where cerberus database needs to be stored
+  reuse_database: True                                 # When enabled, the database is reused to store the failures
