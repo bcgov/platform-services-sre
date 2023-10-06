@@ -1,7 +1,8 @@
 # Use Uptime.com API to manage objects
-# Reference: https://uptime.com/api/v1/docs/#
-# There are very detailed information for each endpoint, you can get sample scripts as well.
 
+Reference: https://uptime.com/api/v1/docs/#. There are very detailed information for each endpoint, you can get sample scripts as well.
+
+```shell
 # Setup your auth token:
 export UPTIME_AUTH_TOKEN=<get_token_from_service>
 # Get list of components:
@@ -67,3 +68,4 @@ curl -X 'PATCH' \
     "contact-3"
   ]
 }'
+```
