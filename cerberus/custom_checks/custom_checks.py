@@ -38,6 +38,19 @@ def check_cluster_readyz():
         return False
 
 
+def check_cluster_console():
+    logging.info("Check cluster console accessibility.")
+
+    console_url = runcommand.invoke("oc whoami --show-console")
+    response = requests.get(console_url, verify=False)
+
+    if (response.status_code == 200):
+        logging.info("Cluster console success")
+        return True
+    else:
+        return False
+
+
 def check_image_registry_and_routing():
     logging.info("Check Image Registry API and test on routing layer.")
 
@@ -130,7 +143,8 @@ def main():
         "kubectl cluster-info | awk 'NR==1' | grep -Eo '(http|https)://[a-zA-Z0-9./?=_%:-]*'")
 
     check1 = check_nodes()
-    check2 = check_cluster_readyz()
+    check21 = check_cluster_readyz()
+    check22 = check_cluster_console()
     check3 = check_image_registry_and_routing()
     check4 = check_storage()
     # Note: this check is failing in all clusters, disabling for now!
@@ -140,4 +154,4 @@ def main():
 
     logging.info("------------------- Finished Custom Checks -------------------")
 
-    return check1 & check2 & check3 & check4 & check5 & check6
+    return check1 & check21 & check22 & check3 & check4 & check5 & check6
