@@ -41,10 +41,9 @@ def check_cluster_readyz():
 def check_cluster_console():
     logging.info("Check cluster console accessibility.")
 
-    console_url = runcommand.invoke("oc whoami --show-console")
-    response = requests.get(console_url, verify=False).replace("\n", "").replace(" ", "")
-
-    logging.info("----" + response + "-------")
+    console_url = runcommand.invoke("oc whoami --show-console").replace("\n", "").replace(" ", "")
+    logging.info("----" + console_url + "-------")
+    response = requests.get(console_url, verify=False)
 
     if (response.status_code == 200):
         logging.info("Cluster console success")
