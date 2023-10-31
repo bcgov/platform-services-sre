@@ -92,11 +92,9 @@ oc -n [namespace] create -f ./devops/cerberus.yml
 # Poke the exposed endpoint -> should get TRUE
 oc -n [namespace] get route cerberus-service
 curl -i <cerberus_url>
-
-# get monitoring statistics:
-curl -i <cerberus_url>/history # History is saved with persistent storage
-curl -i <cerberus_url>/analyze
 ```
+
+To get the monitoring statistics for a specific period, check it out from a browser with `<cerberus_url>/analyze`.
 
 ### Troubleshooting:
 ```shell
