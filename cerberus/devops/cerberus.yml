@@ -45,6 +45,9 @@ spec:
             - mountPath: "/tmp/cerberus-config-template.yaml"
               subPath: cerberus-config-template.yaml
               name: cerberus-config
+            # - mountPath: "/usr/local/bin/custom_checks/custom_checks.py"
+            #   subPath: custom_checks.py
+            #   name: cerberus-custom-check
             - mountPath: /tmp/data
               name: cerberus-storage
       volumes:
