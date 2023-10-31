@@ -83,7 +83,10 @@ oc -n [namespace] get secret artifacts-platsvcs-reader
 # build:
 oc -n [namespace] create -f ./devops/cerberus-bc.yml
 
-# deploy cerberus (make sure it's using the correct image tag):
+# deploy cerberus into a statefulset for HA (make sure it's using the correct image tag):
+oc -n [namespace] create -f ./devops/cerberus-sts.yml
+
+# if you just need one pod running, create a deployment instead:
 oc -n [namespace] create -f ./devops/cerberus.yml
 ```
 
