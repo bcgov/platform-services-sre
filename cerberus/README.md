@@ -83,7 +83,10 @@ oc -n [namespace] get secret artifacts-platsvcs-reader
 # build:
 oc -n [namespace] create -f ./devops/cerberus-bc.yml
 
-# deploy cerberus (make sure it's using the correct image tag):
+# deploy cerberus into a statefulset for HA (make sure it's using the correct image tag):
+oc -n [namespace] create -f ./devops/cerberus-sts.yml
+
+# if you just need one pod running, create a deployment instead:
 oc -n [namespace] create -f ./devops/cerberus.yml
 ```
 
@@ -92,11 +95,9 @@ oc -n [namespace] create -f ./devops/cerberus.yml
 # Poke the exposed endpoint -> should get TRUE
 oc -n [namespace] get route cerberus-service
 curl -i <cerberus_url>
-
-# get monitoring statistics:
-curl -i <cerberus_url>/history # History is saved with persistent storage
-curl -i <cerberus_url>/analyze
 ```
+
+To get the monitoring statistics for a specific period, check it out from a browser with `<cerberus_url>/analyze`.
 
 ### Troubleshooting:
 ```shell

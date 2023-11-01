@@ -1,15 +1,14 @@
-# not used at the moment as we need HA into the cerberus server pods
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
-  name: cerberus-deployment
+  name: cerberus-server
   namespace: openshift-bcgov-cerberus
   labels:
     app: cerberus
 spec:
-  replicas: 1
-  selector: 
+  replicas: 3
+  selector:
     matchLabels:
       tool: Cerberus
   template:
@@ -45,9 +44,6 @@ spec:
             - mountPath: "/tmp/cerberus-config-template.yaml"
               subPath: cerberus-config-template.yaml
               name: cerberus-config
-            # - mountPath: "/usr/local/bin/custom_checks/custom_checks.py"
-            #   subPath: custom_checks.py
-            #   name: cerberus-custom-check
             - mountPath: /tmp/data
               name: cerberus-storage
       volumes:
@@ -57,27 +53,22 @@ spec:
         - name: cerberus-config
           configMap:
             name: cerberus-config
-        # Add custom check as configmap:
-        # - name: cerberus-custom-check
-        #   configMap:
-        #     name: cerberus-custom-check
-        - name: cerberus-storage
-          persistentVolumeClaim:
-            claimName: cerberus-storage
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: cerberus-storage
-  namespace: openshift-bcgov-cerberus
-  labels:
-    app: cerberus
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 5Gi
+  updateStrategy:
+    type: RollingUpdate
+  volumeClaimTemplates:
+    - metadata:
+        annotations:
+          volume.beta.kubernetes.io/storage-class: netapp-file-standard
+        labels:
+          tool: Cerberus
+        name: cerberus-storage
+      spec:
+        storageClassName: netapp-file-standard
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 5Gi
 ---
 apiVersion: v1
 kind: Service
