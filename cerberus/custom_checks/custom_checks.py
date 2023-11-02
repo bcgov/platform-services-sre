@@ -41,7 +41,8 @@ def check_cluster_readyz():
 def check_cluster_console():
     logging.info("Check cluster console accessibility.")
 
-    console_url = runcommand.invoke("oc whoami --show-console").replace("\n", "").replace(" ", "")
+    console_url = runcommand.invoke(
+        "oc whoami --show-console").replace("\n", "").replace(" ", "")
     logging.info("----" + console_url + "-------")
     response = requests.get(console_url, verify=False)
 
@@ -70,6 +71,7 @@ def check_image_registry_and_routing():
     else:
         return False
 
+
 def check_storage():
     logging.info("Check if netapp storages are all available.")
 
@@ -87,9 +89,10 @@ def check_storage():
 
         if (status != "online"):
             return False
-    
+
     logging.info("Storage success")
     return True
+
 
 def check_PV():
     logging.info("Check if the PV connection is okay.")
@@ -108,7 +111,7 @@ def check_PV():
     logging.info("PVC check result, file:" +
                  check_file + ", block:" + check_block)
     if (check_file == "successfully" and check_block == "successfully"):
-        logging.info("PV connection success")
+        logging.info("Both File and Block PV connection success!")
         return True
     else:
         return False
@@ -148,11 +151,10 @@ def main():
     check22 = check_cluster_console()
     check3 = check_image_registry_and_routing()
     check4 = check_storage()
-    # Note: this check is failing in all clusters, disabling for now!
-    # check5 = check_PV()
-    check5 = True
+    check5 = check_PV()
     check6 = check_kyverno()
 
-    logging.info("------------------- Finished Custom Checks -------------------")
+    logging.info(
+        "------------------- Finished Custom Checks -------------------")
 
     return check1 & check21 & check22 & check3 & check4 & check5 & check6
