@@ -93,14 +93,16 @@ There are three main metrics types that can be utilized for working with Service
 •	**Red Method**
 •	**Golden Signals**
 Use Method are metrics to help reduce cost and at a high level. So, lets cover what USE Method is:
-Utilization – Identify the percentage of the time that a Pod is being utilize on a Node within the cluster. 
-Saturation – Identifying when services or the application is being access (aka queued). For example, if the service is an Application Program Interface (API) server such as Spring Boot and the Payload is taking a while to return because it is processing other requests. This can come in the form of utilization metrics. 
-Errors – These are Errors that are actually “reported” against the service or application. 
+* Utilization – Identify the percentage of the time that a Pod is being utilize on a Node within the cluster. 
+* Saturation – Identifying when services or the application is being access (aka queued). For example, if the service is an Application Program Interface (API) server such as Spring Boot and the Payload is taking a while to return because it is processing other requests. This can come in the form of utilization metrics. 
+* Errors – These are Errors that are actually “reported” against the service or application. 
+
+
 Currently BC PaaS allows for the collection of the USE Method. Which can const of items such as:
 •	Resource utilization of Memory and CPU. 
 However, disk utilization I am currently unsure of as this is a on prem cluster and needs to be validated that the below query examples can be ran depending on permission issues from a client perspective. Below references some “Prometheus” queries that be used. Prometheus is one of the tool options that can be utilized. 
 These are the standard metrics identified for Product Team. Golden Signals is a good place to start. These are metrics that can be identified no matter what the application is. Let’s look into Golden Signals. 
- 
+ ![Drag Racing](./assets/USE_Method.png)
 The above is a high-level graphic of metrics to use for USE Method
 Examples that can be utilize in Prometheus below for the Use Method.
 
