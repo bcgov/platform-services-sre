@@ -7,7 +7,6 @@ It is important to notate that not all environments are created equal but if the
 •	Silver Cluster
 •	Emerald Cluster
 •	KLab Cluster
-•	KLab2 Cluster
 •	ROSA Cluster – **In Progress**
 
 ## GOALS AND VISION FOR EACH ENVIRONMENT
@@ -25,7 +24,6 @@ For now, based on the information lets break apart the environments where the cu
 
 **Platform Team Environments:**
 •	KLab Cluster
-•	KLab2 Cluster
 
 So now that the environments are identified to the customer. Let’s identify the role in which each environment is used at a high level.
 Product Team Environments – Utilized by Product Teams to host applications and services. 
@@ -40,9 +38,9 @@ This section will discuss some of the high service level objectives that were id
 •	99.5% availability for multi-node application deployments
 
 **Current Gold Cluster SLOs**
-•	99.5% availability for multi-node application deployments
+•	99.95% availability for application deployments with a geographic failover
 
-**Current DXE Team SLO against the Cluster API Availability**
+**Current DXC Team SLO against the Cluster API Availability**
 •	97% API Availability
 
 So currently availability is the only type of SLOs that are identified across the platform. Now because the Application Program Interface (API) SLOs state a 97% available does not mean that the application or service MUST adhere to 97% availability. This is because most applications will access the service through a load balancer or a different entry point than that of the main OpenShift API. That is why each core service should be identified as well with SLOs and SLIs indicating their capabilities and dependencies across the Platform.
@@ -123,7 +121,7 @@ sum(node_load1{job="default/node-exporter"}) / sum(node:node_num_cpu:sum)
 
 OpenShift Example:
 ```
-sum by (pod,namespace) (rate(container_cpu_cfs_throttled_seconds_total{container=!""}[5m]))
+sum by (pod,namespace) (rate(container_cpu_cfs_throttled_seconds_total{namespace=".."}[5m]))
 ```
 
 Memory Utilization:
@@ -138,12 +136,12 @@ sum by(pod,namespace) (container_memory_working_set_bytes{container="",pod!=""})
 
 Memory Saturation:
 ```
-1e3 * sum( rate(node_vmstat_pgpgin{job=“…”}[1m]) + rate(node_vmstat_pgpgout{job=“…”}[1m])) )
+1e3 * sum( rate(node_vmstat_pgpgin{job=“…”}[1m]) + rate(node_vmstat_pgpgout{job=“…”}[1m])) 
 ```
 
 OpenShift Example:
 ```
-max by (pod,namespace) (container_memory_working_set_bytes{container!=""} / on (pod,namespace,container)
+max by (pod,namespace) (container_memory_working_set_bytes{container!=""}) / on (pod,namespace,container)
 ```
 
 ## Golden Signals can be categorized as below:
