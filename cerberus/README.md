@@ -5,20 +5,18 @@
 Use Cerberus for cluster monitoring that serves a go/no-go signal for uptime status.
 
 ### Things that Cerberus monitors:
-- [x] cluster Operators
+- [ ] cluster Operators (covered by ops team monitoring)
 - [x] critical alerts from prometheus:
   - KubeAPILatencyHigh
   - etcdHighNumberOfLeaderChanges
-- [x] cluster nodes: master, infra, app (watching all nodes are in good status)
-- [ ] all pods from the specified namespaces (too aggressive, using custom checks instead)
-- [x] custom checks: 
-  - monitoring on the 5 major cluster services identified in [Miro board](https://miro.com/app/board/o9J_kgyjm_k=/)
-  - image registry / Artifactory
-  - ingress service
-  - API service
-  - worker nodes
-  - NetApp storage (Trident backend)
-  - pvc check(prerequisite: pvc checker deployment needs to happen first, done by ccm)
+- [ ] all cluster nodes: master, infra, app (it's a normal operational activity to drain and restart nodes during events like an upgrade, we should only be alerted when there are a significant number of nodes go down at the same time)
+- [ ] all pods from the specified namespaces (this is too aggressive as an indicator of cluster uptime status, we are using custom checks instead)
+- custom checks are used to monitor the major cluster services identified
+  - [x] image registry
+  - [x] console and API service
+  - [x] worker nodes (when less than 80% is ready)
+  - [x] NetApp storage (Trident backend)
+  - [x] pvc check (prerequisite: pvc checker deployment managed by CCM)
 
 
 Here is an example of the monitoring output that reflects the above monitors:
