@@ -156,5 +156,5 @@ def main():
 
     logging.info(
         "------------------- Finished Custom Checks -------------------")
-    print(check1, check21, check22, check3, check4, check5, check6)
+    logging.info(check1, check21, check22, check3, check4, check5, check6)
     return check1 & check21 & check22 & check3 & check4 & check5 & check6
