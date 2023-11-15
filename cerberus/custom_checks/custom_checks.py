@@ -41,7 +41,8 @@ def check_cluster_readyz():
 def check_cluster_console():
     logging.info("Check cluster console accessibility.")
 
-    console_url = runcommand.invoke("oc whoami --show-console").replace("\n", "").replace(" ", "")
+    console_url = runcommand.invoke(
+        "oc whoami --show-console").replace("\n", "").replace(" ", "")
     logging.info("----" + console_url + "-------")
     response = requests.get(console_url, verify=False)
 
@@ -70,6 +71,7 @@ def check_image_registry_and_routing():
     else:
         return False
 
+
 def check_storage():
     logging.info("Check if netapp storages are all available.")
 
@@ -87,9 +89,10 @@ def check_storage():
 
         if (status != "online"):
             return False
-    
+
     logging.info("Storage success")
     return True
+
 
 def check_PV():
     logging.info("Check if the PV connection is okay.")
@@ -107,10 +110,13 @@ def check_PV():
         "oc -n openshift-bcgov-cerberus exec $(oc -n openshift-bcgov-cerberus get pod -o name -l app=deployment-to-test-storage-connection) -- timeout --preserve-status 3 touch /mnt/block/test && echo 'successfully'")
     logging.info("PVC check result, file:" +
                  check_file + ", block:" + check_block)
-    if (check_file == "successfully" and check_block == "successfully"):
-        logging.info("PV connection success")
+
+    if (check_file.strip() == "successfully" and check_block.strip() == "successfully"):
+        logging.info("Both File and Block PV connection success!")
         return True
     else:
+        logging.warning("PVC connection check failed. File result:" +
+                        check_file + "block result: "+check_file
         return False
 
 
@@ -119,13 +125,13 @@ def check_kyverno():
     # Cerberus will create patch and delete one of the configmap to blackbox test kyverno's status.
     # Those permission is necessary for cerberus SA to do that. Kyverno is validating configmap create / update / delete operations.
 
-    create_config = runcommand.invoke(
+    create_config=runcommand.invoke(
         'oc create -n openshift-bcgov-cerberus configmap simple-test --from-literal=data="asdf" && echo "successed"')
 
-    patch_output = runcommand.invoke(
+    patch_output=runcommand.invoke(
         'oc patch configmap/simple-test -n openshift-bcgov-cerberus -p \'{"data": {"data": "dfad"}}\'')
 
-    delete_config = runcommand.invoke(
+    delete_config=runcommand.invoke(
         "oc delete -n openshift-bcgov-cerberus configmap/simple-test")
 
     if ("successed" in create_config) and ("patched" in patch_output):
@@ -140,19 +146,17 @@ def main():
 
     # get cluster API url:
     global cluster_api_url
-    cluster_api_url = runcommand.invoke(
+    cluster_api_url=runcommand.invoke(
         "kubectl cluster-info | awk 'NR==1' | grep -Eo '(http|https)://[a-zA-Z0-9./?=_%:-]*'")
 
-    check1 = check_nodes()
-    check21 = check_cluster_readyz()
-    check22 = check_cluster_console()
-    check3 = check_image_registry_and_routing()
-    check4 = check_storage()
-    # Note: this check is failing in all clusters, disabling for now!
-    # check5 = check_PV()
-    check5 = True
-    check6 = check_kyverno()
+    check1=check_nodes()
+    check21=check_cluster_readyz()
+    check22=check_cluster_console()
+    check3=check_image_registry_and_routing()
+    check4=check_storage()
+    check5=check_PV()
+    check6=check_kyverno()
 
-    logging.info("------------------- Finished Custom Checks -------------------")
-
+    logging.info(
+        "------------------- Finished Custom Checks -------------------")
     return check1 & check21 & check22 & check3 & check4 & check5 & check6
