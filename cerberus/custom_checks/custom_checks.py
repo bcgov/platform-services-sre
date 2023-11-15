@@ -110,13 +110,13 @@ def check_PV():
         "oc -n openshift-bcgov-cerberus exec $(oc -n openshift-bcgov-cerberus get pod -o name -l app=deployment-to-test-storage-connection) -- timeout --preserve-status 3 touch /mnt/block/test && echo 'successfully'")
     logging.info("PVC check result, file:" +
                  check_file + ", block:" + check_block)
-    logging.info(check_file)
-    logging.info(check_block)
 
-    if (check_file == "successfully" and check_block == "successfully"):
+    if (check_file.strip() == "successfully" and check_block.strip() == "successfully"):
         logging.info("Both File and Block PV connection success!")
         return True
     else:
+        logging.warning("PVC connection check failed. File result:" +
+                        check_file.strip() + "block result: "+check_file.strip())
         return False
 
 
@@ -159,7 +159,6 @@ def main():
 
     logging.info(
         "------------------- Finished Custom Checks -------------------")
-    logging.info(check1, check21, check22)
     logging.info(check3)
     logging.info(check4)
     logging.info(check5)
