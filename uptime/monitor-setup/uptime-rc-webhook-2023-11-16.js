@@ -11,6 +11,17 @@
 const USERNAME = 'Uptime.com Alerts';
 const AVATAR_URL = 'https://avatars.githubusercontent.com/u/54849620?s=200&v=4';
 
+const secondsToDHMS = (seconds) => {
+  // Calculate days, hours, minutes, and remaining seconds
+  const days = Math.floor(seconds / 86400);
+  const hours = Math.floor((seconds % 86400) / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const remainingSeconds = Math.round(seconds % 60);
+
+  // Format the result
+  return `${days}d ${hours}h ${minutes}m ${remainingSeconds}s`;
+}
+
 /* exported Script */
 class Script {
   /**
@@ -35,7 +46,8 @@ class Script {
     let titleText = '';
     let titleLink = '';
     if (isUp) {
-      attachmentText += 'Back to normal now!';
+      const durationString = secondsToDHMS(data.downtime.duration);
+      attachmentText += `Back to normal now! Was down for ${durationString}`;
       titleText = 'More info';
       titleLink = 'https://uptime.com';
     } else {
