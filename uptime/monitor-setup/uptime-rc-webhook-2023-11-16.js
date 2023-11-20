@@ -35,23 +35,24 @@ class Script {
     // We are using Custom HTTP Headers to add user tagging information:
     const contactUser = request.headers.contactusers;
 
-    let attachmentColor = `#A63636`;
-    let statusText = `DOWN`;
-    if (isUp) {
-      attachmentColor = `#36A64F`;
-      statusText = `UP`;
-    }
-
+    let attachmentColor = '';
+    let statusText = '';
     let attachmentText = '';
     let titleText = '';
     let titleLink = '';
+    let downtimeDuration = 'unknown';
     if (isUp) {
-      const durationString = secondsToDHMS(data.downtime.duration);
-      attachmentText += `Back to normal now! Was down for ${durationString}`;
+      // not sure if downtime duration will always return:
+      if (data.downtime.duration) downtimeDuration = secondsToDHMS(data.downtime.duration);
+      attachmentText += `Back to normal now! Was down for ${downtimeDuration}`;
+      statusText = `UP`;
+      attachmentColor = `#36A64F`;
       titleText = 'More info';
       titleLink = 'https://uptime.com';
     } else {
       attachmentText += `Reason: ${data.output}`;
+      statusText = `DOWN`;
+      attachmentColor = `#A63636`;
       titleText = 'More info';
       titleLink = data.alert_history_url;
     }
@@ -63,6 +64,7 @@ class Script {
         text: `${contactUser} Monitor ${checkName} is ${statusText}.\n Link: ${checkURL}\n`,
         attachments: [{
           title: titleText,
+          title_link: titleLink,
           text: attachmentText,
           color: attachmentColor
         }]
