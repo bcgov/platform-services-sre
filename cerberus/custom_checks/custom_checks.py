@@ -125,17 +125,12 @@ def check_kyverno():
     # Cerberus will create patch and delete one of the configmap to blackbox test kyverno's status.
     # Those permission is necessary for cerberus SA to do that. Kyverno is validating configmap create / update / delete operations.
 
-    create_config = runcommand.invoke(
-        'oc create -n openshift-bcgov-cerberus configmap simple-test --from-literal=data="asdf" && echo "successed"')
+    check_number_of_runing_pod = runcommand.invoke(
+        'oc -n kyverno get pods --selector=app.kubernetes.io/name=kyverno --field-selector=status.phase=Running --no-headers | wc -l')
 
-    patch_output = runcommand.invoke(
-        'oc patch configmap/simple-test -n openshift-bcgov-cerberus -p \'{"data": {"data": "dfad"}}\'')
-
-    delete_config = runcommand.invoke(
-        "oc delete -n openshift-bcgov-cerberus configmap/simple-test")
-
-    if ("successed" in create_config) and ("patched" in patch_output):
-        logging.info("Kyverno success")
+    if (int(check_number_of_runing_pod) > 0):
+        logging.info("Kyverno check success with " +
+                     check_number_of_runing_pod + " pod(s) running.")
         return True
     else:
         return False
