@@ -65,5 +65,16 @@ Based off this, we come up with folloing Registry App SRE Implementation
 
 - **Sysdig Metrics Monitoring:** Utilizes Sysdig to monitor network latency, pod availability, and resource usage. These metrics are crucial when defining the error budget for a given period, providing evidence for performance and reliability.Dashboard link can be found [here](https://app.sysdigcloud.com/#/dashboards/403704?last=9676800&highlightedPanelId=53&scope=kubernetes.cluster.name%20as%20%22cluster%22%20in%20%3F%28%22silver%22%29%20and%20kubernetes.namespace.name%20as%20%22namespace%22%20in%20%3F%28%22101ed4-prod%22%29%20and%20kubernetes.workload.type%20as%20%22type%22%20in%20%3F%20and%20kubernetes.workload.name%20as%20%22workload%22%20in%20%3F%20and%20container.label.io.kubernetes.pod.name%20as%20%22pod%22%20in%20%3F)
 
+PromQL gets used in this implementation are
+Pod availability in past 3 weeks
+```
+100 - sum(avg_over_time( (kube_workload_status_desired{kube_cluster_name='silver', kube_namespace_name='101ed4-prod',kube_workload_name =~ 'platsrv-registry-api|platsrv-registry-web|pltsvc-mongodb'} - kube_workload_status_ready{kube_cluster_name='silver', kube_namespace_name='101ed4-prod', kube_workload_name =~ 'platsrv-registry-api|platsrv-registry-web|pltsvc-mongodb'} > 0 )[3w:]))
+```
+Network latency in past 3 weeks
+```
+100 - avg(max_over_time((sysdig_container_net_http_request_time{kube_cluster_name='silver', kube_namespace_name='101ed4-prod',kube_workload_name =~ 'platsrv-registry-api|platsrv-registry-web|pltsvc-mongodb'})[3w:]) / 1000000000 < 2)
+```
+
+
 ## Review Frequency:
 Regularly review and update this documentation every six months or as needed to ensure alignment with changing conditions and user expectations.
