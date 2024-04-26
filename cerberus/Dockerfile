@@ -15,7 +15,7 @@ COPY --from=origintests /usr/bin/kubectl /usr/bin/kubectl
 # Install dependencies
 RUN yum install -y git python310 python3-pip gcc python3-devel zlib-devel libjpeg-devel
 
-RUN git clone https://github.com/redhat-chaos/cerberus.git --branch v1.0.4 /root/cerberus
+RUN git clone https://github.com/redhat-chaos/cerberus.git /root/cerberus
 
 # to get rid of the need for privileged user:
 RUN touch /root/cerberus/cerberus.report && \
