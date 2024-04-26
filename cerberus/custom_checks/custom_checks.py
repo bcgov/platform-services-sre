@@ -126,7 +126,7 @@ def check_kyverno():
     # Those permission is necessary for cerberus SA to do that. Kyverno is validating configmap create / update / delete operations.
 
     check_number_of_runing_pod = runcommand.invoke(
-        'oc -n kyverno get pods --selector=app.kubernetes.io/name=kyverno --field-selector=status.phase=Running --no-headers | wc -l')
+        'oc -n kyverno get pods --selector=app.kubernetes.io/component=admission-controller --field-selector=status.phase=Running --no-headers | wc -l')
 
     if (int(check_number_of_runing_pod) > 0):
         logging.info("Kyverno check success with " +
