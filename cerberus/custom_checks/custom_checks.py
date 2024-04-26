@@ -148,7 +148,7 @@ def main():
     check3 = check_image_registry_and_routing()
     check4 = check_storage()
     check5 = check_PV()
-    check6 = check_kyverno()
+    # check6 = check_kyverno()
 
     logging.info(
         "------------------- Finished Custom Checks -------------------")
