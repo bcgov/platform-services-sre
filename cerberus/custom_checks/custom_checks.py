@@ -121,9 +121,7 @@ def check_PV():
 
 
 def check_kyverno():
-    logging.info("Check if the Kyverno ConfigMap is okay.")
-    # Cerberus will create patch and delete one of the configmap to blackbox test kyverno's status.
-    # Those permission is necessary for cerberus SA to do that. Kyverno is validating configmap create / update / delete operations.
+    logging.info("Check if the Kyverno pods are okay.")
 
     check_number_of_runing_pod = runcommand.invoke(
         'oc -n kyverno get pods --selector=app.kubernetes.io/component=admission-controller --field-selector=status.phase=Running --no-headers | wc -l')
@@ -150,8 +148,10 @@ def main():
     check3 = check_image_registry_and_routing()
     check4 = check_storage()
     check5 = check_PV()
-    check6 = check_kyverno()
+    # check6 = check_kyverno()
 
     logging.info(
         "------------------- Finished Custom Checks -------------------")
-    return check1 & check21 & check22 & check3 & check4 & check5 & check6
+    # TMP: disable kyverno check til upgrade completes
+    return check1 & check21 & check22 & check3 & check4 & check5
+    # return check1 & check21 & check22 & check3 & check4 & check5 & check6
