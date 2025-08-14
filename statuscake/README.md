@@ -56,7 +56,14 @@ The script is configured to export from the **"Platform Services"** subaccount. 
 ```bash
 # Edit the script and modify this line:
 TARGET_SUBACCOUNT="Your Subaccount Name"
+
+# Examples (use the exact name from the dropdown on the left):
+TARGET_SUBACCOUNT="Developer Experience Team"
+TARGET_SUBACCOUNT="Digital PIA Team"
+TARGET_SUBACCOUNT="Platform Services"
 ```
+
+**Note**: Use the exact subaccount name as it appears in the dropdown on the left side of uptime.com. Spaces are allowed. For more details, see the [Subaccounts section](https://app.uptime.com/api/tokens) in the uptime.com API documentation.
 
 #### Output Files
 
@@ -93,7 +100,11 @@ export UPTIME_API_TOKEN="uptk_1234567890abcdef"
 
 #### Prerequisites
 
-- **StatusCake API Token**: Get this from your StatusCake workspace
+- **StatusCake API Token**: 
+  1. Login to StatusCake: https://app.statuscake.com/Login/
+  2. Navigate to: https://app.statuscake.com/User.php
+  3. Scroll to bottom of page → **API Keys** section
+  4. Generate/copy your API token
 - **Exported JSON files**: Must have run `migration-from-uptime.sh` first
 - **jq**: JSON processor
 - **curl**: For API requests
@@ -135,9 +146,9 @@ export STATUSCAKE_API_TOKEN="Bearer_your_token_here"
 # Run migration
 ./migrate-to-statuscake-improved.sh
 
-# Output:
-# === IMPROVED STATUSCAKE MIGRATION ===
-# Migrating uptime.com data to StatusCake with better error handling
+# Expected Output:
+# === STATUSCAKE MIGRATION ===
+# Migrating uptime.com data to StatusCake
 # 
 # 🔍 Checking current StatusCake status...
 # Current uptime checks: 25
