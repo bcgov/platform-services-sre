@@ -324,6 +324,8 @@ if [[ ${#CONTACT_GROUP_MAP[@]} -gt 0 ]]; then
         url=$(echo "$line" | jq -r '.msp_address')
         interval_minutes=$(echo "$line" | jq -r '.msp_interval')
         contact_groups=$(echo "$line" | jq -r '.contact_groups[]' 2>/dev/null || echo "")
+        expect_string=$(echo "$line" | jq -r '.msp_expect_string // empty')
+        headers=$(echo "$line" | jq -r '.msp_headers // empty')
         
         # Convert minutes to seconds for our function
         if [[ -n "$interval_minutes" && "$interval_minutes" != "null" ]]; then
@@ -334,6 +336,14 @@ if [[ ${#CONTACT_GROUP_MAP[@]} -gt 0 ]]; then
         
         log_message "[$monitor_count/$total_monitors] Processing monitor '$name'"
         log_message "  URL: $url, Interval: ${interval_minutes}min"
+        
+        # Log additional configuration if present
+        if [[ -n "$expect_string" ]]; then
+            log_message "  Expect String: $expect_string"
+        fi
+        if [[ -n "$headers" ]]; then
+            log_message "  Custom Headers: $headers"
+        fi
         
         # Skip if we're likely to hit limits (rough estimate)
         current_count=$(get_current_check_count)
@@ -368,6 +378,21 @@ if [[ ${#CONTACT_GROUP_MAP[@]} -gt 0 ]]; then
         form_data+="&test_type=HTTP"
         form_data+="&check_rate=$check_rate"
         form_data+="&regions[]=TORONTO"
+        
+        # Add find_string if expect_string is present
+        if [[ -n "$expect_string" ]]; then
+            encoded_string=$(printf '%s' "$expect_string" | sed 's/ /%20/g' | sed 's/"/%22/g' | sed 's/:/%3A/g' | sed 's/{/%7B/g' | sed 's/}/%7D/g' | sed 's/&/%26/g')
+            form_data+="&find_string=$encoded_string"
+            log_message "   Added find_string: $expect_string"
+        fi
+        
+        # Add custom header if headers are present
+        if [[ -n "$headers" ]]; then
+            # StatusCake expects custom_header format: "Header-Name: Header-Value"
+            encoded_header=$(printf '%s' "$headers" | sed 's/ /%20/g' | sed 's/:/%3A/g' | sed 's/&/%26/g')
+            form_data+="&custom_header=$encoded_header"
+            log_message "   Added custom_header: $headers"
+        fi
         
         # Add contact groups if they exist
         if [[ -n "$contact_group_ids" ]]; then
@@ -440,3 +465,4 @@ fi
 echo "📝 Next Steps:"
 echo "1. Check StatusCake dashboard for created resources"
 echo "2. Set up webhook URLs for contacts that need them"
+ 
