@@ -2,13 +2,13 @@
 
 This directory contains two scripts that work together to migrate your monitoring setup from uptime.com to StatusCake.
 
-## 📋 Overview
+## Overview
 
 The migration process consists of two steps:
 1. **Export data from uptime.com** using `migration-from-uptime.sh`
 2. **Import data into StatusCake** using `migrate-to-statuscake-improved.sh`
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Step 1: Export from Uptime.com
 
@@ -118,11 +118,11 @@ export UPTIME_API_TOKEN="uptk_1234567890abcdef"
 
 #### Key Features
 
-- ✅ **Automatic contact group mapping**: Reuses existing groups, creates missing ones
-- ✅ **Plan limit handling**: Stops gracefully when StatusCake limits are reached
-- ✅ **Error handling**: Retries failed API calls, provides detailed logging
-- ✅ **Webhook placeholder**: Marks integration-based contacts for manual setup
-- ✅ **Regional monitoring**: All checks use Toronto region for Canadian compliance
+- **Automatic contact group mapping**: Reuses existing groups, creates missing ones
+- **Plan limit handling**: Stops gracefully when StatusCake limits are reached
+- **Error handling**: Retries failed API calls, provides detailed logging
+- **Webhook placeholder**: Marks integration-based contacts for manual setup
+- **Regional monitoring**: All checks use Toronto region for Canadian compliance
 
 #### Configuration
 
@@ -155,7 +155,7 @@ export STATUSCAKE_API_TOKEN="Bearer_your_token_here"
 # Monitors to migrate: 25
 # 
 # Step 1: Creating contact groups...
-# ✅ Mapped contact 'platform-services-admins' to ID: 344914
+# Mapped contact 'platform-services-admins' to ID: 344914
 # ...
 ```
 
