@@ -2,7 +2,7 @@
 
 FROM quay.io/openshift/origin-tests:latest as origintests
 
-FROM quay.io/centos/centos:7
+FROM registry.access.redhat.com/ubi9/ubi:latest
 
 MAINTAINER Red Hat OpenShift Performance and Scale
 
@@ -13,7 +13,8 @@ COPY --from=origintests /usr/bin/oc /usr/bin/oc
 COPY --from=origintests /usr/bin/kubectl /usr/bin/kubectl
 
 # Install dependencies
-RUN yum install -y git python310 python3-pip gcc python3-devel zlib-devel libjpeg-devel
+RUN dnf install -y git python3 python3-pip gcc python3-devel zlib-devel libjpeg-turbo-devel && \
+    dnf clean all
 
 RUN git clone https://github.com/redhat-chaos/cerberus.git /root/cerberus
 
